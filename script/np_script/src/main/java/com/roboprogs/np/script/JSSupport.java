@@ -5,12 +5,18 @@ package com.roboprogs.np.script;
  */
 public abstract class JSSupport {
 
-	/** data to be shared with children (sub-classes) */
-	protected final String data;
+    /** instance counter */
+    private static int cnt = 0;
+    
+	/** data to identify instances */
+	private final String data;
 
-	/** init */
-	protected JSSupport() {
-		this.data = "family secret";
+	/** init - MUST be a default constructor to work with JavaScript */
+	protected JSSupport( ) {
+        synchronized ( JSSupport.class ) {
+            JSSupport.cnt++;
+            this.data = "" + JSSupport.cnt;
+        }
 	}
 
 	/** force superclass and subclass to interact */
@@ -26,7 +32,7 @@ public abstract class JSSupport {
 
 	/** print stuff, Java style */
 	protected void jprint( String s) {
-		System.out.println( "JAVALAND print: " + s);
+		System.out.println( "[Instance " + this.data +  "] JAVALAND print: " + s);
 	}
 
 }
