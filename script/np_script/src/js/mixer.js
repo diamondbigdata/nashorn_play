@@ -21,7 +21,13 @@ var mixer = {
     run: function () {
         var mixed
 
+        print( "\nCreating (but NOT running) #1\n")
         mixed = mixer.create_mixed_object()
+
+        print( "\nCreating and running #2\n")
+        mixer.create_mixed_object().run()
+
+        print( "\nRunning #1\n")
         mixed.run()
     },
 
