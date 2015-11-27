@@ -31,7 +31,10 @@ var mixer = {
         mixed.run()
     },
 
-    /** factory method for mixed JS/Java object */
+    /**
+     * factory method for mixed JS/Java object
+     * @returns {com.roboprogs.np.script.JSSupport}
+     */
     create_mixed_object: function () {
         var self
 
@@ -47,7 +50,10 @@ var mixer = {
         return self
     },
 
-    /** function to use as the helper in the "mixed" object */
+    /**
+     * function to use as the helper in the "mixed" object
+     * @param self {Object} - java anonymous class (subclass of JSSupport)
+     */
     help: function ( self ) {
         Java.super( self ).jprint( 'JavaScript asked to print this' )
     },
