@@ -55,7 +55,16 @@ var mixer = {
      * @param self {Object} - java anonymous class (subclass of JSSupport)
      */
     help: function ( self ) {
-        Java.super( self ).jprint( 'JavaScript asked to print this' )
+        var parent, o
+
+        parent = Java.super( self )
+        o = {
+            alpha: 42,
+            beta: 'X',
+        }
+        parent.jprint( 'JavaScript object', o )
+        parent[ 'jprint(String)' ]( 'JavaScript asked to print this' )
+        parent[ 'jprint(ScriptObjectMirror)' ]( o )
     },
 
 }
