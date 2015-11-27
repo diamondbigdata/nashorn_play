@@ -30,7 +30,7 @@ var ns = {
     /**
      * Factory method for fixed precision numbers.
      * @param num_str {string} - numeric value as a string
-     * @return java.math.BigDecimal
+     * @returns {java.math.BigDecimal}
      */
     create_number: function ( num_str ) {
         return new java.math.BigDecimal( num_str )
