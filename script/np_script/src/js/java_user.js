@@ -33,7 +33,7 @@ var ns = {
      * @returns {java.math.BigDecimal}
      */
     create_number: function ( num_str ) {
-        return new java.math.BigDecimal( num_str )
+        return new Packages.java.math.BigDecimal( num_str )
     }
 
 }
