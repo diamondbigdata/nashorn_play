@@ -3,8 +3,15 @@
 // Run a script which has a dependency on another script.
 // This script assumes moment.js is (downloaded and) in the current directory
 //
-//  Usage:
-//          js_dep.js [ format [ increment unit ] ]
+// Usage:
+//          js_dep.js [ -- format [ increment unit ] ]
+// E.g. -
+//          js_dep.js
+//          js_dep.js -- MM/DD/YYYY
+//          js_dep.js -- 'Do MMMM, YYYY' 7 day
+//          js_dep.js -- 'MM/DD/YYYY HH:mm' -4 hour
+//
+// See http://momentjs.com/ for additional format (etc) samples
 // .....................................
 
 'use strict'
