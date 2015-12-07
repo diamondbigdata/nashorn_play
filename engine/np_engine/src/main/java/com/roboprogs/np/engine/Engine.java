@@ -13,7 +13,7 @@ public class Engine {
 
         engine = ( new ScriptEngineManager() ).getEngineByName( "nashorn" );
         engine.eval( "var x = { hello: 'world' }" ) );
-        engine.eval( "print( x ) + '\\n'" );
+        engine.eval( "print( x + '\\n' )" );
         System.out.println( engine.eval( "x" ) );
     }
 
