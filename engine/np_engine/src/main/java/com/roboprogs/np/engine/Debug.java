@@ -30,7 +30,12 @@ public class Debug {
         tsOps.run( "MM/DD/YYYY HH:mm", -4, "hour");
 */
 
+        // step INTO these in debugger to enable JS debugging
+
         engine.eval( "dep.run()" );
+        engine.eval( "dep.run( 'MM/DD/YYYY' )" );
+        engine.eval( "dep.run( 'Do MMMM, YYYY', 7, 'day' )" );
+        engine.eval( "dep.run( 'MM/DD/YYYY HH:mm', -4, 'hour' )" );
     }
 
     /** dummy interface to fish up the function we want in js_user.js */
