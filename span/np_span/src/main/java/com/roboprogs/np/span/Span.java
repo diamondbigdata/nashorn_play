@@ -1,13 +1,22 @@
 package com.roboprogs.np.span;
 
+import spark.Spark;
+
 /**
  * Hello world!
- *
  */
-public class Span
-{
-    public static void main( String[] args )
-    {
-        System.out.println( "Hello World!" );
+public class Span {
+
+    /** program entry point */
+    public static void main( String[] args ) {
+        Spark.get( "/hello", ( req, res ) -> {
+            String name;
+
+            name = req.queryParams( "name" );
+            return "Hello, " + ( ( name != null) ?
+                    name :
+                    "World" );
+        } );
     }
+
 }
