@@ -4,7 +4,7 @@ package com.roboprogs.np.span;
  * Hello world!
  *
  */
-public class App 
+public class Span
 {
     public static void main( String[] args )
     {
