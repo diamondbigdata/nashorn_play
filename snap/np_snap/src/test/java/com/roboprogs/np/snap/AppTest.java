@@ -1,4 +1,4 @@
-package com.roboprogs.np.span;
+package com.roboprogs.np.snap;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

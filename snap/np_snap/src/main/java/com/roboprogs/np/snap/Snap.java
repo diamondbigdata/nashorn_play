@@ -1,4 +1,4 @@
-package com.roboprogs.np.span;
+package com.roboprogs.np.snap;
 
 import java.io.*;
 import javax.script.ScriptEngineManager;
