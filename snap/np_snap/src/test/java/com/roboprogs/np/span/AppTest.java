@@ -5,7 +5,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 /**
- * Unit test for simple Span.
+ * Unit test for simple Snap.
  */
 public class AppTest 
     extends TestCase

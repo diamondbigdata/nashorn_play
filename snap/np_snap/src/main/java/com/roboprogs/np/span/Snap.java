@@ -10,7 +10,7 @@ import spark.Spark;
 /**
  * Demo SNAP web stack.
  */
-public class Span {
+public class Snap {
 
     /**
      * Nashorn JS interpreter/JIT.
@@ -39,8 +39,8 @@ public class Span {
 
         // TODO: proper error handling
         in = new BufferedReader( new InputStreamReader(
-                Span.class.getResourceAsStream( fname ) ) );
-        Span.engine.eval( in );
+                Snap.class.getResourceAsStream( fname ) ) );
+        Snap.engine.eval( in );
         in.close();;
     }
 
