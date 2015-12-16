@@ -22,6 +22,10 @@ public class Snap {
 
     /** program entry point */
     public static void main( String[] args ) throws Exception {
+
+        // e.g. - view localhost:4567/html/index.html
+        Spark.staticFileLocation( "/public" );
+
         loadScript( "/js/snap.js" );
         Spark.get( "/hello", ( req, res ) -> {
             String name;
