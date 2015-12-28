@@ -18,12 +18,10 @@ import spark.Spark;
 public class Snap {
 
     /**
-     * Nashorn JS interpreter/JIT.
-     * Assume it is thead-safe, for now.
+     * Cache of script engines, one per thread.
      */
-    public static final NashornScriptEngine engine =
-            (NashornScriptEngine) ( new ScriptEngineManager() ) .
-                getEngineByName( "nashorn" );
+    private static final ThreadLocal <NashornScriptEngine> engines =
+            ThreadLocal.withInitial( Snap::initScriptEngine );
 
     /** program entry point */
     public static void main( String[] args ) throws Exception {
@@ -34,7 +32,10 @@ public class Snap {
         // TODO: get and use a DB connection...
         getDataSource().getConnection();
 
-        loadScript( "/js/snap.js" );
+        // see that script engine only loads external scripts once:
+        Snap.engines.get();
+        Snap.engines.get();
+
         Spark.get( "/hello", ( req, res ) -> {
             String name;
 
@@ -45,14 +46,31 @@ public class Snap {
         } );
     }
 
+    /** init an engine with all needed server side scripts */
+    private static NashornScriptEngine initScriptEngine() {
+        NashornScriptEngine engine;
+
+        try {
+            engine = (NashornScriptEngine) ( new ScriptEngineManager() ) .
+                    getEngineByName( "nashorn" );
+            loadScript( engine, "/js/snap.js" );
+            return engine;
+        } catch ( Throwable e ) {
+            throw new RuntimeException( "Script engine init failed", e );
+        }
+    }
+
     /** Run (load) the indicated Javascript (resource) */
-    private static void loadScript( String fname ) throws Exception {
+    private static void loadScript(
+            NashornScriptEngine engine,
+            String fname )
+            throws Exception {
         Reader in;
 
         // TODO: proper error handling
         in = new BufferedReader( new InputStreamReader(
                 Snap.class.getResourceAsStream( fname ) ) );
-        Snap.engine.eval( in );
+        engine.eval( in );
         in.close();
     }
 
