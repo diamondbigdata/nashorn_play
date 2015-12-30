@@ -30,14 +30,16 @@ public class Snap {
         Spark.staticFileLocation( "/public" );
 
         // TODO: get and use a DB connection...
-        getDataSource().getConnection();
-
-        // see that script engine only loads external scripts once:
-        Snap.engines.get();
-        Snap.engines.get();
+        // getDataSource().getConnection();
 
         Spark.get( "/hello", ( req, res ) -> {
+            NashornScriptEngine engine;
+            Object jsSnap;
             String name;
+
+            engine = Snap.engines.get();
+            jsSnap = engine.get( "snap" );
+            engine.invokeMethod( jsSnap, "hello" );
 
             name = req.queryParams( "name" );
             return "Hello, " + ( ( name != null) ?
