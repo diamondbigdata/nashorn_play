@@ -7,6 +7,8 @@ import javax.script.ScriptEngineManager;
 import javax.sql.DataSource;
 import jdk.nashorn.api.scripting.NashornScriptEngine;
 
+import org.eclipse.jetty.util.log.Log;
+import org.eclipse.jetty.util.log.Logger;
 import org.postgresql.ds.PGPoolingDataSource;
 
 import spark.Request;
@@ -19,12 +21,15 @@ import spark.Spark;
  */
 public class Snap {
 
+    private static final Logger log = Log.getLogger( Snap.class );
+
     /** Cache of script engines, one per thread. */
     private static final ThreadLocal <NashornScriptEngine> engines =
             ThreadLocal.withInitial( Snap::initScriptEngine );
 
     /** program entry point */
     public static void main( String[] args ) throws Exception {
+        log.info( "Starting app..." );
 
         // e.g. - view localhost:4567/html/index.html
         Spark.staticFileLocation( "/public" );
@@ -49,14 +54,16 @@ public class Snap {
         final String WEB_REQ_OBJ = "snap";  // assume all handlers in this object
 
         NashornScriptEngine thdEngine;
+        String errMsg;
 
         try {
             thdEngine = Snap.engines.get();  // one engine per thread, they are not thread safe
             return thdEngine.invokeMethod( thdEngine.get( WEB_REQ_OBJ ),
                     fname, req, res );
         } catch ( Throwable e ) {
-            // TODO: log, rather than re-throw
-            throw new RuntimeException( "Failed request to " + fname, e );
+            errMsg = "Failed request to " + fname;
+            log.warn( errMsg, e );
+            return errMsg;  // TODO: better error handling (can I return an exception and get an error page?)
         }
     }
 
@@ -64,6 +71,7 @@ public class Snap {
     private static NashornScriptEngine initScriptEngine() {
         NashornScriptEngine engine;
 
+        log.info( "Starting JS engine for thread" );
         try {
             engine = (NashornScriptEngine) ( new ScriptEngineManager() ) .
                     getEngineByName( "nashorn" );
@@ -71,6 +79,8 @@ public class Snap {
             return engine;
         } catch ( Throwable e ) {
             throw new RuntimeException( "Script engine init failed", e );
+        } finally {
+            log.info( "JS engine started (or failed)" );
         }
     }
 
