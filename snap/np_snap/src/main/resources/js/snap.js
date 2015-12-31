@@ -6,6 +6,9 @@
  */
 var snap = {
 
+    /** java based logger */
+    log: Java.type( 'org.eclipse.jetty.util.log.Log').getLogger( 'snap.js' ),
+
     /**
      * Handle the "hello" (test) web request
      * @param req - Spark request
@@ -22,5 +25,7 @@ var snap = {
 
 }
 
-print( 'Loaded' )
-// TODO: log that script was loaded
+snap.log.info( 'Loaded' )
+
+// vi: ts=4 sw=4 expandtab
+// *** EOF ***
