@@ -9,6 +9,8 @@ import jdk.nashorn.api.scripting.NashornScriptEngine;
 
 import org.postgresql.ds.PGPoolingDataSource;
 
+import spark.Request;
+import spark.Response;
 import spark.Spark;
 
 
@@ -17,9 +19,7 @@ import spark.Spark;
  */
 public class Snap {
 
-    /**
-     * Cache of script engines, one per thread.
-     */
+    /** Cache of script engines, one per thread. */
     private static final ThreadLocal <NashornScriptEngine> engines =
             ThreadLocal.withInitial( Snap::initScriptEngine );
 
@@ -33,19 +33,34 @@ public class Snap {
         // getDataSource().getConnection();
 
         Spark.get( "/hello", ( req, res ) -> {
-            NashornScriptEngine engine;
-            Object jsSnap;
             String name;
 
-            engine = Snap.engines.get();
-            jsSnap = engine.get( "snap" );
-            engine.invokeMethod( jsSnap, "hello" );
+            runSnapWebFunc( "hello", req, res );
 
             name = req.queryParams( "name" );
             return "Hello, " + ( ( name != null) ?
                     name :
                     "World" );
         } );
+    }
+
+    /** run a function from the JS snap object as a web request handler */
+    private static void runSnapWebFunc(
+            String fname,
+            Request req,
+            Response res ) {
+        final String WEB_REQ_OBJ = "snap";  // assume all handlers in this object
+
+        NashornScriptEngine thdEngine;
+
+        try {
+            thdEngine = Snap.engines.get();  // one engine per thread, they are not thread safe
+            thdEngine.invokeMethod( thdEngine.get( WEB_REQ_OBJ ),
+                    fname, req, res );
+        } catch ( Throwable e ) {
+            // TODO: log, rather than re-throw
+            throw new RuntimeException( "Failed request to " + fname, e );
+        }
     }
 
     /** init an engine with all needed server side scripts */
