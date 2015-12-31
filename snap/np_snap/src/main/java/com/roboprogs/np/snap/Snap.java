@@ -28,24 +28,21 @@ public class Snap {
 
         // e.g. - view localhost:4567/html/index.html
         Spark.staticFileLocation( "/public" );
+        registerJsGetter( "/hello", "hello" );
 
         // TODO: get and use a DB connection...
         // getDataSource().getConnection();
-
-        Spark.get( "/hello", ( req, res ) -> {
-            String name;
-
-            runSnapWebFunc( "hello", req, res );
-
-            name = req.queryParams( "name" );
-            return "Hello, " + ( ( name != null) ?
-                    name :
-                    "World" );
-        } );
     }
 
-    /** run a function from the JS snap object as a web request handler */
-    private static void runSnapWebFunc(
+    /** register a JS function to handle a web request */
+    private static void registerJsGetter(
+            String path,
+            String fname ) {
+        Spark.get( path, ( req, res ) -> runSnapWebFunc( fname, req, res ) );
+    }
+
+    /** run a function from the JS snap object on a web request handler thread */
+    private static Object runSnapWebFunc(
             String fname,
             Request req,
             Response res ) {
@@ -55,7 +52,7 @@ public class Snap {
 
         try {
             thdEngine = Snap.engines.get();  // one engine per thread, they are not thread safe
-            thdEngine.invokeMethod( thdEngine.get( WEB_REQ_OBJ ),
+            return thdEngine.invokeMethod( thdEngine.get( WEB_REQ_OBJ ),
                     fname, req, res );
         } catch ( Throwable e ) {
             // TODO: log, rather than re-throw

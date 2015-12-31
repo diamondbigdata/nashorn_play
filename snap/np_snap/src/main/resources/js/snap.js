@@ -2,11 +2,22 @@
 
 /**
  * Namespace for top level request handlers in this demo.
+ * @namespace
  */
 var snap = {
 
-    hello: function () {
-        print( 'TODO - access java web support code' )
+    /**
+     * Handle the "hello" (test) web request
+     * @param req - Spark request
+     * @param res - Spark response
+     */
+    hello: function ( req, res ) {
+        var name
+
+        name = req.queryParams( 'name' )
+        return 'Hello, ' + ( name ?
+                name :
+                'World' )
     },
 
 }
