@@ -10,6 +10,9 @@ import jdk.nashorn.api.scripting.NashornScriptEngine;
 import org.eclipse.jetty.util.log.Log;
 import org.eclipse.jetty.util.log.Logger;
 import org.postgresql.ds.PGPoolingDataSource;
+import org.springframework.jdbc.core.JdbcTemplate;
+
+import com.google.gson.Gson;
 
 import spark.Request;
 import spark.Response;
@@ -27,6 +30,12 @@ public class Snap {
     private static final ThreadLocal <NashornScriptEngine> engines =
             ThreadLocal.withInitial( Snap::initScriptEngine );
 
+    /** JDBC wrapper */
+    private static final JdbcTemplate jdbc = new JdbcTemplate( getDataSource() );
+
+    /** JSON conversion tool */
+    private static final Gson gson = new Gson();
+
     /** program entry point */
     public static void main( String[] args ) throws Exception {
         log.info( "Starting app..." );
@@ -34,6 +43,7 @@ public class Snap {
         // e.g. - view localhost:4567/html/index.html
         Spark.staticFileLocation( "/public" );
         registerJsGetter( "/hello", "hello" );
+        registerJsGetter( "/test", "test" );
 
         // TODO: get and use a DB connection...
         // getDataSource().getConnection();
@@ -96,6 +106,18 @@ public class Snap {
                 Snap.class.getResourceAsStream( fname ) ) );
         engine.eval( in );
         in.close();
+    }
+
+    /** Get a Spring JDBC wrapper */
+    @SuppressWarnings( "unused" )
+    public static JdbcTemplate getJdbcTemplate() {
+        return Snap.jdbc;
+    }
+
+    /** Get a JSON conversion tool */
+    @SuppressWarnings( "unused" )
+    public static Gson getGson() {
+        return Snap.gson;
     }
 
     /** Get a datasource for connection. */

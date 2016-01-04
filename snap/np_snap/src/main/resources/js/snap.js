@@ -9,6 +9,15 @@ var snap = {
     /** java based logger */
     log: Java.type( 'org.eclipse.jetty.util.log.Log').getLogger( 'snap.js' ),
 
+    /** java side of snap app code */
+    snap_j: Java.type( 'com.roboprogs.np.snap.Snap' ),
+
+    /** jdbc wrapper tool (java based) */
+    jdbc: Java.type( 'com.roboprogs.np.snap.Snap').getJdbcTemplate(),
+
+    /** JSON conversion tool for native Java objects */
+    gson: Java.type( 'com.roboprogs.np.snap.Snap').getGson(),
+
     /**
      * Handle the "hello" (test) web request
      * @param req - Spark request
@@ -21,6 +30,23 @@ var snap = {
         return 'Hello, ' + ( name ?
                 name :
                 'World' )
+    },
+
+    /**
+     * Handle a test request for JSON data from database
+     * @param req - Spark request
+     * @param res - Spark response
+     */
+    test: function ( req, res ) {
+        var results, json
+
+        snap.log.info( 'Querying test collection...' )
+        results = snap.jdbc.queryForList(
+                "select * from collections where collection = 'test'" )
+        snap.log.info( 'Raw results: ' + results )
+        json = snap.gson.toJson( results )
+        snap.log.info( 'JSON results: ' + json )
+        return json
     },
 
 }
