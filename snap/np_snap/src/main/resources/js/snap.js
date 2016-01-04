@@ -38,12 +38,20 @@ var snap = {
      * @param res - Spark response
      */
     test: function ( req, res ) {
-        var results, json
+        var results, entry_set, json
 
         snap.log.info( 'Querying test collection...' )
         results = snap.jdbc.queryForList(
                 "select * from collections where collection = 'test'" )
         snap.log.info( 'Raw results: ' + results )
+        results.forEach( function ( row ) {
+            snap.log.info( 'Row: ' + row )
+            entry_set = new java.util.ArrayList ( row.entrySet() )
+            entry_set.forEach( function ( entry ) {
+                snap.log.info( '\tEntry: ' + entry )
+                snap.log.info( '\t\tType: ' + entry.getValue().getClass().getName() )
+            } )
+        } )
         json = snap.gson.toJson( results )
         snap.log.info( 'JSON results: ' + json )
         return json
