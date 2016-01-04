@@ -31,6 +31,8 @@ createdb $DB_NAME
 # create a user and password ("demo") to use for connections
 psql -d $DB_NAME -c "create user $DB_USER password '$DB_PWD'"
 
+psql -d $DB_NAME -f init_snap_db.sql
+
 ps auxww | grep '[p]ostgres'
 echo run tail -f postgres.log to monitor database
 
