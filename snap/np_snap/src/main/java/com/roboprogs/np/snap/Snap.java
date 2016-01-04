@@ -1,18 +1,24 @@
 package com.roboprogs.np.snap;
 
 import java.io.*;
+import java.lang.reflect.Type;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import javax.script.ScriptEngineManager;
 import javax.sql.DataSource;
+
 import jdk.nashorn.api.scripting.NashornScriptEngine;
 
 import org.eclipse.jetty.util.log.Log;
 import org.eclipse.jetty.util.log.Logger;
 import org.postgresql.ds.PGPoolingDataSource;
+import org.postgresql.util.PGobject;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializer;
 
 import spark.Request;
 import spark.Response;
@@ -34,7 +40,7 @@ public class Snap {
     private static final JdbcTemplate jdbc = new JdbcTemplate( getDataSource() );
 
     /** JSON conversion tool */
-    private static final Gson gson = new Gson();
+    private static final Gson gson = initGson();
 
     /** program entry point */
     public static void main( String[] args ) throws Exception {
@@ -146,6 +152,16 @@ public class Snap {
         } catch ( Throwable e) {
             throw new RuntimeException( "Datasource fetch failed", e );
         }
+    }
+
+    /** configure and create a JSON tool to process (PostgreSQL) result sets */
+    private static Gson initGson() {
+        JsonSerializer <PGobject> jsonColToStr;
+
+        jsonColToStr = ( jsonCol, unused1, unused2 ) ->
+                new JsonPrimitive( jsonCol.toString() );
+        return ( new GsonBuilder() ).registerTypeAdapter(
+                PGobject.class, jsonColToStr ).create();
     }
 
 }
