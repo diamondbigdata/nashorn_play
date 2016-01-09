@@ -12,8 +12,8 @@ public class Engine {
         ScriptEngine engine;
 
         engine = ( new ScriptEngineManager() ).getEngineByName( "nashorn" );
-        engine.eval( "var x = { hello: 'world' }" ) );
-        engine.eval( "print( x + '\\n' )" );
+        engine.eval( "var x = { hello: 'world' }" );
+        engine.eval( "print( JSON.stringify( x ) + '\\n' )" );
         System.out.println( engine.eval( "x" ) );
     }
 
