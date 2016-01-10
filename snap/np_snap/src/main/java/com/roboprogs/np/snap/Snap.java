@@ -40,7 +40,7 @@ public class Snap {
     private static final JdbcTemplate jdbc = new JdbcTemplate( getDataSource() );
 
     /** JSON conversion tool */
-    private static final Gson gson = initGson();
+    private static final Gson gson = new Gson();
 
     /** program entry point */
     public static void main( String[] args ) throws Exception {
@@ -152,16 +152,6 @@ public class Snap {
         } catch ( Throwable e) {
             throw new RuntimeException( "Datasource fetch failed", e );
         }
-    }
-
-    /** configure and create a JSON tool to process (PostgreSQL) result sets */
-    private static Gson initGson() {
-        JsonSerializer <PGobject> jsonColToStr;
-
-        jsonColToStr = ( jsonCol, unused1, unused2 ) ->
-                new JsonPrimitive( jsonCol.toString() );
-        return ( new GsonBuilder() ).registerTypeAdapter(
-                PGobject.class, jsonColToStr ).create();
     }
 
 }
