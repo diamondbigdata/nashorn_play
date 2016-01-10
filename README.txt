@@ -53,4 +53,14 @@ The idea is to provide an alternative to "MEAN"
 (Mongo, Express, AngularJS, Node.js)
 
 Key Files:
+	* Snap.java
+		Application start point.
+	* snap.js
+		Javascript part of the (server side) application.
+	* index.html
+		The static web page.
+	* start_empty_pg_db.sh / init_snap_db.sql
+		Scripting to create a test database instance and
+		run a server against it.
+
 
