@@ -50,6 +50,7 @@ public class Snap {
         Spark.staticFileLocation( "/public" );
         registerJsGetter( "/hello", "hello" );
         registerJsGetter( "/test", "test" );
+        registerJsGetter( "/inv_list", "inv_list" );
 
         // TODO: get and use a DB connection...
         // getDataSource().getConnection();

@@ -57,6 +57,32 @@ var snap = {
         return json
     },
 
+    /**
+     * Return the invoice list.
+     * @param req - Spark request
+     * @param res - Spark response
+     */
+    inv_list: function ( req, res ) {
+        var SQL = "\
+select \
+        id, \
+        ( doc ->> 'id' ) :: text as invoice, \
+        ( doc ->> 'total' ) :: numeric as total \
+    from collections \
+    where collection = 'invoice' \
+    order by total desc \
+        "
+
+        var results, json
+
+        snap.log.info( 'Querying invoice list: ' + SQL )
+        results = snap.jdbc.queryForList( SQL )
+        json = snap.gson.toJson( results )
+        snap.log.debug( 'Results: ' + json )
+        // TODO: set response type header
+        return json
+    },
+
 }
 
 snap.log.info( 'Loaded' )
