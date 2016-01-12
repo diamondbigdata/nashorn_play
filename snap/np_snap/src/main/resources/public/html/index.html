@@ -3,8 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <title>SNAP Demo</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js">
+    </script>
+    <script src="../js/ang_app.js" >
+    </script>
 </head>
-<body>
-TODO
+<body
+    ng-app="app"
+    ng-controller="appCtrl"
+>
+    <div
+        ng-hide="mod.inv_id"
+    >
+        <h1>Invoice List</h1>
+    </div>
+    <div
+        ng-show="mod.inv_id"
+    >
+        <h1>Invoice</h1>
+    </div>
 </body>
 </html>
+
+<!--
+vi: ts=4 sw=4 ai expandtab
+-->
